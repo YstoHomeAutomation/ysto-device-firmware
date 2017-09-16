@@ -1,6 +1,6 @@
 #include "ESPHelper.h"
 
-#define TOPIC "MA003/relay"
+#define TOPIC "MA001/output"
 #define STATUS TOPIC "/status"
 #define RELAY_PIN 3   
 
@@ -9,11 +9,13 @@ char* statusTopic = STATUS;
 
 const int relayPin = RELAY_PIN;
 
-netInfo homeNet = {
-  .name = "MA003",
-  .mqtt = "192.168.10.101",
+netInfo homeNet = {  
+  .mqttHost = "192.168.10.101",
+  .mqttUser = "",
+  .mqttPass = "",
+  .mqttPort = 1883,
   .ssid = "mozolino",
-  .pass = "costinha"
+  .pass = "costinha",
 };
 
 ESPHelper myESP(&homeNet);
@@ -45,7 +47,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
     myESP.publish(statusTopic, "1",true);
   } else if (payload[0] == '0'){
     digitalWrite(relayPin, LOW);
-    myESP.client.publish(statusTopic, "0", true);
+    myESP.publish(statusTopic, "0", true);
   }
 }
 
